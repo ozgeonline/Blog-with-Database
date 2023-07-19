@@ -31,7 +31,6 @@ const connectDB = async () => {
   }
 }
 
-let posts = [];
 
 const postSchema = {
   title: String,
@@ -39,12 +38,17 @@ const postSchema = {
  };
 const Post = mongoose.model("Post", postSchema);
 
-app.get("/", function(req, res){
-  res.render("home", {
-    startingContent: homeStartingContent,
-    posts: posts
-    });
+app.get("/", function(req, res) {
+
+  Post.find().then(posts =>{
+    res.render("home", {
+      startingContent: homeStartingContent,
+      posts: posts
+      });
+  });
 });
+
+
 
 app.get("/about", function(req, res){
   res.render("about", {aboutContent: aboutContent});
@@ -65,25 +69,19 @@ app.post("/compose", function(req, res){
   });
 
   post.save();
-
   res.redirect("/");
 
 });
 
-app.get("/posts/:postName", function(req, res){
-  const requestedTitle = _.lowerCase(req.params.postName);
+app.get("/posts/:postId", function(req, res){
+  const requestedPostId = req.params.postId;
 
-  posts.forEach(function(post){
-    const storedTitle = _.lowerCase(post.title);
-
-    if (storedTitle === requestedTitle) {
-      res.render("post", {
-        title: post.title,
-        content: post.content
-      });
-    }
+  Post.findOne({ _id: requestedPostId }).then(post => {
+    res.render("post", {
+      title: post.title,
+      content: post.content
+    });
   });
-
 });
 
 
