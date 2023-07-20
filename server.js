@@ -14,7 +14,7 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');//şablon yolu:ejs
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
@@ -31,7 +31,6 @@ const connectDB = async () => {
   }
 }
 
-
 const postSchema = {
   title: String,
   content: String
@@ -46,9 +45,9 @@ app.get("/", function(req, res) {
       posts: posts
       });
   });
+  //view engine ayarlanmadıysa dosya uzantısı yazılır.
+  //Express ile bir dosyayı şablon motoru ile HTML’e çevirmek için Express modülü içerisinde yer alan render metodu kullanılır.
 });
-
-
 
 app.get("/about", function(req, res){
   res.render("about", {aboutContent: aboutContent});
@@ -64,8 +63,8 @@ app.get("/compose", function(req, res){
 
 app.post("/compose", function(req, res){
   const post = new Post ({
-  title: req.body.postTitle,
-  content: req.body.postBody
+  title: req.body.postTitle, //inputtan alınan veri name:tanımlanarak çekildi
+  content: req.body.postBody //textareadan alınan veri tanımlaması
   });
 
   post.save();
